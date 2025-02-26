@@ -100,7 +100,8 @@ class ANALYZER_EXPORT SDIOAnalyzer : public Analyzer2
     int byteCounter = 0;
     U64 qwordHigh = 0;
     U64 qwordLow = 0;
-    U32 lastCommand;
+    U32 lastCommand = 0;
+    U32 lastCommandValue = 0;
     U32 expectedCRC;
     S64 startingSampleInclusive = 0;
     S64 endingSampleInclusive = 0;

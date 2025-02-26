@@ -217,7 +217,6 @@ bool SDIOAnalyzer::FrameStateMachine( void )
         frameCounter = 6;
 
         qwordLow = 0;
-        lastCommand = 0;
         expectedCRC = 0;
         startOfNextFrame = UINT64_MAX;
         break;
@@ -245,11 +244,15 @@ bool SDIOAnalyzer::FrameStateMachine( void )
             expectedCRC = sdCRC7( 0, ( frame.mData2 << 6 ) | frame.mData1 );
 
             // Once we have the argument
+            lastCommandValue = frame.mData1;
 
-            lastCommand = frame.mData1;
+            if ( isCmd )
+            {
+                lastCommand = lastCommandValue;
+            }
 
             // Find the expected length of the next response based on the command
-            if( !isCmd && ( qwordLow == 2 || qwordLow == 9 || qwordLow == 10 ) )
+            if( !isCmd && ( lastCommand == 2 || lastCommand == 9 || lastCommand == 10 ) )
             // CMD2, CMD9 and CMD10 respond with long R2 response
             {
                 respLength = 127;
@@ -288,7 +291,7 @@ bool SDIOAnalyzer::FrameStateMachine( void )
         {
             frame.mStartingSampleInclusive = startOfNextFrame;
             frame.mEndingSampleInclusive = mClock->GetSampleOfNextEdge();
-            frame.mFlags = lastCommand;
+            frame.mFlags = lastCommandValue;
             frame.mData1 = qwordLow;
             frame.mType = FRAME_ARG;
 
