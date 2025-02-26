@@ -117,7 +117,7 @@ void SDIOAnalyzer::PacketStateMachine()
         // After advancing to the next command line edge the clock can either
         // high or low.  If it is high, we need to advance two clock edges.  If
         // it is low, we only need to advance one clock edge.
-        if( mClock->GetBitState() == BIT_HIGH )
+        if( mClock->GetBitState() == BIT_LOW )
         {
             mClock->AdvanceToNextEdge();
         }
@@ -155,7 +155,7 @@ void SDIOAnalyzer::PacketStateMachine()
         if( mDAT3 )
             mDAT3->AdvanceToAbsPosition( sampleNumber );
 
-        if( mClock->GetBitState() == BIT_HIGH )
+        if( mClock->GetBitState() == BIT_LOW )
         {
             mResults->AddMarker( mClock->GetSampleNumber(), AnalyzerResults::UpArrow, mSettings->mClockChannel );
             if( FrameStateMachine() )
